@@ -1,13 +1,20 @@
 class Tree
   attr_accessor :children, :node_name
 
+  # Children from first parent
+  # {"dad"=>{"child 1"=>{}, "child 2"=>{}}, "uncle"=>{"child 3"=>{}, "child 4"=>{}}}
+  # I need to make an array out of the hash keys and turn them into individual Trees
+
   def initialize(treeHash)
-    @children = treeHash[treeHash.keys[0]]
+    @children = [treeHash[treeHash.keys[0]].each { |key, value| Tree.new(Hash[key, value]) }]
+    #@children = treeHash.keys.each {|key| Tree.new({"#{key}" => treeHash[key]})}
     @node_name = treeHash.keys[0]
+    puts children
   end
 
   def visit_all(&block)
     visit &block
+    puts children[0].class
     children.each {|c| c.visit_all &block}
   end
 
